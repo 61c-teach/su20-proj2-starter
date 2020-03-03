@@ -1,5 +1,5 @@
-.import ../relu.s
-.import ../utils.s
+.import ../../src/relu.s
+.import ../../src/utils.s
 
 # Set vector values for testing
 .data

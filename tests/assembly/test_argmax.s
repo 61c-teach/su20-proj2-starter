@@ -1,5 +1,5 @@
-.import ../argmax.s
-.import ../utils.s
+.import ../../src/argmax.s
+.import ../../src/utils.s
 
 .data
 v0: .word 3 -42 432 7 -5 6 5 -114 2 # MAKE CHANGES HERE

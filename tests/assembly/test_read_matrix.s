@@ -13,5 +13,4 @@ main:
 
 
     # Terminate the program
-    addi a0, x0, 10
-    ecall
+    jal exit
