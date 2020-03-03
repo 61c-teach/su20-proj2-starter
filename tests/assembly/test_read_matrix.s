@@ -1,5 +1,5 @@
-.import ../read_matrix.s
-.import ../utils.s
+.import ../../src/read_matrix.s
+.import ../../src/utils.s
 
 .data
 file_path: .asciiz "./test_input.bin"

@@ -1,0 +1,13 @@
+{
+    "name": "Basic Main Test",
+    "test_file": "../../src/main.s",
+    "args": ["-it", "-ms", "-1", "inputs/simple0/bin/m0.bin", "inputs/simple0/bin/m1.bin", "inputs/simple0/bin/inputs/input0.bin", "outputs/test_basic_main/student.bin"],
+    "stdout": "2\n",
+    "compare_files": [
+        {
+            "reference": "outputs/test_basic_main/reference.bin",
+            "student": "outputs/test_basic_main/student.bin"
+        }
+    ],
+    "exitcode": 0
+}

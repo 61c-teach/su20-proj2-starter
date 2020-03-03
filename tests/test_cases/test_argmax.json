@@ -2,7 +2,6 @@
     "name": "Basic Argmax Test",
     "test_file": "test_argmax.s",
     "args": ["-it", "-ms", "-1"],
-    "stdout": "2",
-    "stderr": "",
+    "stdout": "2\n",
     "exitcode": 0
 }

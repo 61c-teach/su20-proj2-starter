@@ -1,5 +1,5 @@
-.import ../dot.s
-.import ../utils.s
+.import ../../src/dot.s
+.import ../../src/utils.s
 
 # Set vector values for testing
 .data

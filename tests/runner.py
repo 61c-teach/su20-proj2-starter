@@ -4,8 +4,35 @@ import subprocess
 
 VENUS_PATH = "../utils/venus.jar"
 
+class FileCompare:
+    def __init__(self, reference, student):
+        self.reference = reference
+        self.student = student
+    
+    def compare(self) -> bool:
+        if not os.path.isfile(self.reference):
+            print(f"Could not find the reference file {self.reference}!")
+            return False
+        if not os.path.isfile(self.student):
+            print(f"Could not find the student output file {self.student}!")
+            return False
+        with open(self.reference, "rb") as r:
+            with open(self.student, "rb") as s:
+                ref = r.read()
+                std = s.read()
+                if ref == std:
+                    return True
+                else:
+                    print("~" * 20)
+                    print(f"The student and reference files differed!")
+                    print("~" * 20)
+                    print(f"Reference ({self.reference}):")
+                    print(ref.hex())
+                    print(f"Actual ({self.student}):")
+                    print(std.hex())
+                    return False
 class TestCase:
-    def __init__(self, name, test_file, args=[], stdout="", stderr="", exitcode=0, cwd=None, timeout=80):
+    def __init__(self, name, test_file, args=[], stdout="", stderr="", exitcode=0, cwd=None, timeout=80, compare_files=[]):
         self.name = name
         self.test_file = test_file
         self.args = args
@@ -14,6 +41,7 @@ class TestCase:
         self.exitcode = exitcode
         self.cwd = cwd
         self.timeout = timeout
+        self.compare_files = [FileCompare(**cf) for cf in compare_files]
 
     def run(self, test_file_path: str):
         try:
@@ -62,6 +90,8 @@ class TestCase:
                 print("~" * 20)
                 print(f"Expected: {self.exitcode}, Actual: {p.returncode}")
                 passing = False
+            for cf in self.compare_files:
+                passing = passing and cf.compare()
             if passing:
                 self.print_end("PASSED")
                 return True
