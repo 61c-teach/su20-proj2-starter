@@ -32,7 +32,7 @@ class FileCompare:
                     print(std.hex())
                     return False
 class TestCase:
-    def __init__(self, name, test_file, args=[], stdout="", stderr="", exitcode=0, cwd=None, timeout=80, compare_files=[]):
+    def __init__(self, name, test_file, args=[], stdout="", stderr="", exitcode=0, cwd=None, timeout=10, compare_files=[]):
         self.name = name
         self.test_file = test_file
         self.args = args
@@ -91,7 +91,7 @@ class TestCase:
                 print(f"Expected: {self.exitcode}, Actual: {p.returncode}")
                 passing = False
             for cf in self.compare_files:
-                passing = passing and cf.compare()
+                passing = cf.compare() and passing
             if passing:
                 self.print_end("PASSED")
                 return True
