@@ -31,6 +31,7 @@ class FileCompare:
                     print(f"Actual ({self.student}):")
                     print(std.hex())
                     return False
+TEST_COUNTER = 1
 class TestCase:
     def __init__(self, name, test_file, args=[], stdout="", stderr="", exitcode=0, cwd=None, timeout=10, compare_files=[]):
         self.name = name
@@ -46,7 +47,9 @@ class TestCase:
     def run(self, test_file_path: str):
         try:
             print("*" * 40)
-            print(f"Running {self.name}...")
+            global TEST_COUNTER
+            print(f"[{TEST_COUNTER}] Running {self.name}...")
+            TEST_COUNTER += 1
             print("*" * 40)
             filepath = os.path.join(test_file_path, self.test_file)
             p = subprocess.Popen(["java", "-jar", VENUS_PATH, filepath] + self.args, stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=self.cwd, universal_newlines = True, bufsize=100)
