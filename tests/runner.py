@@ -129,7 +129,7 @@ def load_tests(path):
                 with open(os.path.join(path, file), "r") as f:
                     t = json.load(f)
                     if isinstance(t, list):
-                        tests.append(TestCase.loadTestFromList(t))
+                        tests += TestCase.loadTestFromList(t)
                     elif isinstance(t, dict):
                         tests.append(TestCase.loadTest(t))
                     else:
