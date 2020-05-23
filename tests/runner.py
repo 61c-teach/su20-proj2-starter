@@ -2,7 +2,7 @@ import os
 import json
 import subprocess
 
-VENUS_PATH = "../utils/venus.jar"
+VENUS_PATH = "../tools/venus.jar"
 
 class FileCompare:
     def __init__(self, reference, student):
@@ -33,9 +33,10 @@ class FileCompare:
                     return False
 TEST_COUNTER = 1
 class TestCase:
-    def __init__(self, name, test_file, args=[], stdout="", stderr="", exitcode=0, cwd=None, timeout=10, compare_files=[]):
+    def __init__(self, name, test_file, id, args=[], stdout="", stderr="", exitcode=0, cwd=None, timeout=10, compare_files=[]):
         self.name = name
         self.test_file = test_file
+        self.id = id
         self.args = args
         self.stdout = stdout
         self.stderr = stderr
@@ -144,15 +145,20 @@ def load_tests(path):
                 traceback.print_exc()
     return tests
 
-def main():
-    tests = load_tests("test_cases")
+def main(args):
+    tests = sorted(load_tests("test_cases"), key=lambda tc: tc.id)
     passed = 0
+    ran = 0
     for test in tests:
+        if len(args) > 1 and test.id not in args:
+            continue
+        ran += 1
         if test.run("assembly"):
             passed += 1
     print("\n" + ("=" * 40))
-    print(f"Passed {passed} / {len(tests)} tests!")
+    print(f"Passed {passed} / {ran} tests!")
     print("=" * 40)
 
 if __name__ == "__main__":
-    main()
+    import sys
+    main(sys.argv)
