@@ -1,1 +1,1 @@
-# sp20-proj2-starter
+# su20-proj2-starter
