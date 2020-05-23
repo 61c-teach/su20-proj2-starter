@@ -33,7 +33,4 @@ read_matrix:
 
     ret
 
-eof_or_error:
-    li a1 1
-    jal exit2
     

@@ -2,8 +2,6 @@ import os
 import json
 import subprocess
 
-VENUS_PATH = "../tools/venus.jar"
-
 class FileCompare:
     def __init__(self, reference, student):
         self.reference = reference
@@ -31,9 +29,11 @@ class FileCompare:
                     print(f"Actual ({self.student}):")
                     print(std.hex())
                     return False
-TEST_COUNTER = 1
+
 class TestCase:
-    def __init__(self, name, test_file, id, args=[], stdout="", stderr="", exitcode=0, cwd=None, timeout=10, compare_files=[]):
+    VENUS_PATH = "../tools/venus.jar"
+    TEST_COUNTER = 1
+    def __init__(self, name, test_file, id, args=[], stdout="", stderr="", exitcode=0, cwd=None, timeout=10, compare_files=[], printf=print):
         self.name = name
         self.test_file = test_file
         self.id = id
@@ -44,55 +44,56 @@ class TestCase:
         self.cwd = cwd
         self.timeout = timeout
         self.compare_files = [FileCompare(**cf) for cf in compare_files]
+        self.printf = printf
 
     def run(self, test_file_path: str):
         try:
-            print("*" * 40)
-            global TEST_COUNTER
-            print(f"[{TEST_COUNTER}] Running {self.name}...")
-            TEST_COUNTER += 1
-            print("*" * 40)
+            self.printf("*" * 40)
+            self.TEST_COUNTER
+            self.printf(f"[{self.TEST_COUNTER}] ({self.id}) Running {self.name}...")
+            self.TEST_COUNTER += 1
+            self.printf("*" * 40)
             filepath = os.path.join(test_file_path, self.test_file)
-            p = subprocess.Popen(["java", "-jar", VENUS_PATH, filepath] + self.args, stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=self.cwd, universal_newlines = True, bufsize=100)
+            p = subprocess.Popen(["java", "-jar", self.VENUS_PATH, filepath] + self.args, stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=self.cwd, universal_newlines = True, bufsize=100)
             try:
                 out, err = p.communicate(timeout = self.timeout)
             except subprocess.TimeoutExpired:
                 p.kill()
-                print("The test timed out testing your RISC-V function!")
+                self.printf("The test timed out testing your RISC-V function!")
                 self.print_end("TIMEOUT")
                 return False
             passing = True
-            if out != self.stdout:
-                print("~" * 20)
-                print("STDOUT MISMATCH")
-                print("~" * 20)
-                print("Expected:")
-                print("-" * 20)
-                print(self.stdout)
-                print("-" * 20)
-                print("Actual:")
-                print("-" * 20)
-                print(out)
-                print("-" * 20)
+            if out != self.stdout and self.stdout is not None:
+                self.printf("~" * 20)
+                self.printf("STDOUT MISMATCH")
+                self.printf("~" * 20)
+                self.printf("Expected:")
+                self.printf("-" * 20)
+                self.printf(self.stdout)
+                self.printf("-" * 20)
+                self.printf("Actual:")
+                self.printf("-" * 20)
+                self.printf(out)
+                self.printf("-" * 20)
                 passing = False
-            if err != self.stderr:
-                print("~" * 20)
-                print("STDERR MISMATCH")
-                print("~" * 20)
-                print("Expected:")
-                print("-" * 20)
-                print(self.stderr)
-                print("-" * 20)
-                print("Actual:")
-                print("-" * 20)
-                print(err)
-                print("-" * 20)
+            if err != self.stderr and self.stderr is not None:
+                self.printf("~" * 20)
+                self.printf("STDERR MISMATCH")
+                self.printf("~" * 20)
+                self.printf("Expected:")
+                self.printf("-" * 20)
+                self.printf(self.stderr)
+                self.printf("-" * 20)
+                self.printf("Actual:")
+                self.printf("-" * 20)
+                self.printf(err)
+                self.printf("-" * 20)
                 passing = False
-            if p.returncode != self.exitcode:
-                print("~" * 20)
-                print("Return code MISMATCH")
-                print("~" * 20)
-                print(f"Expected: {self.exitcode}, Actual: {p.returncode}")
+            if p.returncode != self.exitcode and self.exitcode is not None:
+                self.printf("~" * 20)
+                self.printf("Return code MISMATCH")
+                self.printf("~" * 20)
+                self.printf(f"Expected: {self.exitcode}, Actual: {p.returncode}")
                 passing = False
             for cf in self.compare_files:
                 passing = cf.compare() and passing
@@ -103,15 +104,15 @@ class TestCase:
                 self.print_end("FAILED")
                 return False
         except Exception as e:
-            print(e)
+            self.printf(e)
             self.print_end("ERRORED")
             return False
-    @staticmethod
-    def print_end(msg):
-        print("-" * 40)
-        print(msg)
-        print("-" * 40)
-        print()
+
+    def print_end(self, msg):
+        self.printf("-" * 40)
+        self.printf(msg)
+        self.printf("-" * 40)
+        self.printf()
 
     @staticmethod
     def loadTestFromList(l: list) -> ["TestCase"]:
