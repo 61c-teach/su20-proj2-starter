@@ -18,7 +18,7 @@
 .globl print_int, print_str, atoi, sbrk, exit, print_char, fopen, fread, fwrite, fclose, exit2, fflush, ferror, print_hex
 
 # helper functions
-.globl file_error, print_int_array, malloc, free
+.globl file_error, print_int_array, malloc, free, print_num_alloc_blocks, num_alloc_blocks
 
 .data
 error_string: .string "This library file should not be directly called!"
@@ -44,7 +44,7 @@ main:
 print_int:
     li a0 c_print_int
     ecall
-    jr ra
+    ret
 
 
 #================================================================
@@ -58,7 +58,7 @@ print_int:
 print_str:
     li a0 c_print_str
     ecall
-    jr ra
+    ret
 
 
 #================================================================
@@ -72,7 +72,7 @@ print_str:
 atoi:
     li a0 c_atoi
     ecall
-    jr ra
+    ret
 
 
 #================================================================
@@ -86,7 +86,7 @@ atoi:
 sbrk:
     li a0 c_sbrk
     ecall
-    jr ra
+    ret
 
 
 #================================================================
@@ -113,7 +113,7 @@ exit:
 print_char:
     li a0 c_print_char
     ecall
-    jr ra
+    ret
 
 
 #================================================================
@@ -128,7 +128,7 @@ print_char:
 fopen:
     li a0 c_openFile
     ecall
-    jr ra
+    ret
 
 
 #================================================================
@@ -144,7 +144,7 @@ fopen:
 fread:
     li a0 c_readFile
     ecall
-    jr ra
+    ret
 
 
 #================================================================
@@ -162,7 +162,7 @@ fread:
 fwrite:
     li a0 c_writeFile
     ecall
-    jr ra
+    ret
 
 
 #================================================================
@@ -176,7 +176,7 @@ fwrite:
 fclose:
     li a0 c_closeFile
     ecall
-    jr ra
+    ret
 
 
 #================================================================
@@ -190,7 +190,7 @@ fclose:
 exit2:
     li a0 c_exit2
     ecall
-    jr ra
+    ret
 
 
 #================================================================
@@ -204,7 +204,7 @@ exit2:
 fflush:
     li a0 c_fflush
     ecall
-    jr ra
+    ret
 
 
 #================================================================
@@ -218,7 +218,7 @@ fflush:
 ferror:
     li a0 c_ferror
     ecall
-    jr ra
+    ret
 
 
 #================================================================
@@ -232,7 +232,7 @@ ferror:
 print_hex:
     li a0 c_printHex
     ecall
-    jr ra
+    ret
 
 
 
@@ -251,7 +251,7 @@ malloc:
     li a0 0x3CC
     addi a6 x0 1
     ecall
-    jr ra
+    ret
 
 
 #================================================================
@@ -267,9 +267,36 @@ free:
     li a0 0x3CC
     addi a6 x0 4
     ecall
-    jr ra
+    ret
 
+#================================================================
+# void num_alloc_blocks(int a0)
+# Returns the number of currently allocated blocks
+# args:
+#   void
+# return:
+#   a0 is the # of allocated blocks
+#================================================================
+num_alloc_blocks:
+    li a0, 0x3CC
+    li a6, 5
+    ecall
+    ret
 
+print_num_alloc_blocks:
+    addi sp, sp -4
+    sw ra 0(sp)
+
+    jal num_alloc_blocks
+    mv a1 a0
+    jal print_int
+
+    li a1 '\n'
+    jal print_char
+
+    lw ra 0(sp)
+    addi sp, sp 4
+    ret
 
 #================================================================
 # void print_int_array(int* a0, int a1, int a2)
@@ -349,4 +376,4 @@ outer_loop_end:
     lw ra 20(sp)
     addi sp sp 24
 
-    jr ra
+    ret
