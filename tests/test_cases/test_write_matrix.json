@@ -1,6 +1,6 @@
 {
     "name": "Basic Write Matrix Test",
-    "id": "writemat",
+    "id": "write_matrix",
     "test_file": "test_write_matrix.s",
     "args": ["-it", "-ms", "-1"],
     "compare_files": [{

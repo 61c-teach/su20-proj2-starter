@@ -18,7 +18,7 @@ classify:
     # this function returns with exit code 49.
     #
     # Usage:
-    #   main.s <M0_PATH> <M1_PATH> <INPUT_PATH> <OUTPUT_PATH>
+    #   main.s -m -1 <M0_PATH> <M1_PATH> <INPUT_PATH> <OUTPUT_PATH>
 
 
 
@@ -81,7 +81,6 @@ classify:
     # WRITE OUTPUT
     # =====================================
     # Write output matrix
-    lw a0 16(s0) # Load pointer to output filename
 
 
 
@@ -101,8 +100,6 @@ classify:
 
 
     # Print newline afterwards for clarity
-    li a1 '\n'
-    jal print_char
 
 
 

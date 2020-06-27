@@ -2,8 +2,8 @@
 .import ../../src/utils.s
 
 .data
-m0: .word 1, 2, 3, 4, 5, 6, 7, 8, 9 # MAKE CHANGES HERE
-file_path: .asciiz "test_output.bin"
+m0: .word 1, 2, 3, 4, 5, 6, 7, 8, 9 # MAKE CHANGES HERE TO TEST DIFFERENT MATRICES
+file_path: .asciiz "outputs/test_write_matrix/student_write_outputs.bin"
 
 .text
 main:
@@ -11,4 +11,3 @@ main:
 
 
     # Exit the program
-    jal exit

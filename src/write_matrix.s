@@ -40,5 +40,3 @@ write_matrix:
 
 
     ret
-
-    

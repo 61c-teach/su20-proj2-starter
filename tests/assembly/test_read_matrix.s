@@ -2,15 +2,16 @@
 .import ../../src/utils.s
 
 .data
-file_path: .asciiz "./test_input.bin"
+file_path: .asciiz "inputs/test_read_matrix/test_input.bin"
 
 .text
 main:
     # Read matrix into memory
 
 
+
     # Print out elements of matrix
 
 
+
     # Terminate the program
-    jal exit

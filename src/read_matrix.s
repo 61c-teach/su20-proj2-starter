@@ -39,5 +39,3 @@ read_matrix:
 
 
     ret
-
-    
