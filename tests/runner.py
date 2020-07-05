@@ -1,6 +1,12 @@
 import os
 import json
 import subprocess
+from pathlib import Path
+
+dirname = os.path.dirname(__file__)
+dirname = Path(dirname).resolve()
+VENUS_PATH = "../tools/venus.jar"
+VENUS_PATH = os.path.join(dirname, VENUS_PATH)
 
 class FileCompare:
     def __init__(self, reference, student):
@@ -31,7 +37,7 @@ class FileCompare:
                     return False
 
 class TestCase:
-    VENUS_PATH = "../tools/venus.jar"
+    VENUS_PATH = VENUS_PATH
     TEST_COUNTER = 1
     def __init__(self, name, test_file, id, args=[], stdout="", stderr="", exitcode=0, cwd=None, timeout=10, compare_files=[], printf=print):
         self.name = name
